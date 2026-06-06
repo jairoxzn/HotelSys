@@ -1,0 +1,97 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  ADMIN
+  RECEPCIONISTA
+  CONTADOR
+}
+
+enum RoomStatus {
+  DISPONIBLE
+  OCUPADA
+  MANTENIMIENTO
+}
+
+enum ReservationStatus {
+  PENDIENTE
+  CONFIRMADA
+  COMPLETADA
+  CANCELADA
+}
+
+model User {
+  id           String        @id @default(cuid())
+  name         String
+  email        String        @unique
+  password     String
+  role         Role
+  createdAt    DateTime      @default(now())
+  reservations Reservation[]
+  auditLogs    AuditLog[]
+}
+
+model Room {
+  id           String        @id @default(cuid())
+  number       String        @unique
+  type         String        // Individual, Doble, Suite, Delux
+  price        Float
+  status       RoomStatus    @default(DISPONIBLE)
+  reservations Reservation[]
+}
+
+model Customer {
+  id           String        @id @default(cuid())
+  fullname     String
+  dni          String        @unique
+  phone        String
+  email        String
+  reservations Reservation[]
+}
+
+model Reservation {
+  id         String            @id @default(cuid())
+  userId     String
+  user       User              @relation(fields: [userId], references: [id])
+  customerId String
+  customer   Customer          @relation(fields: [customerId], references: [id])
+  roomId     String
+  room       Room              @relation(fields: [roomId], references: [id])
+  checkIn    DateTime
+  checkOut   DateTime
+  total      Float
+  status     ReservationStatus @default(PENDIENTE)
+  payments   Payment[]
+  createdAt  DateTime          @default(now())
+}
+
+model Payment {
+  id            String      @id @default(cuid())
+  reservationId String
+  reservation   Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+  amount        Float
+  method        String      // EFECTIVO, TARJETA, TRANSFERENCIA
+  paymentDate   DateTime    @default(now())
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  action    String
+  details   String
+  createdAt DateTime @default(now())
+}
+
+model SystemConfig {
+  id           String   @id @default("default")
+  hotelName    String   @default("HotelFlow")
+  primaryColor String   @default("#6366f1")
+  updatedAt    DateTime @updatedAt
+}

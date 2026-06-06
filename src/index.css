@@ -1,0 +1,158 @@
+@import "tailwindcss";
+
+/* Import Premium Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap');
+
+@theme {
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-heading: 'Outfit', sans-serif;
+
+  /* Custom Premium Colors — linked to runtime CSS custom properties */
+  --color-bg-dark: #0f1015;
+  --color-bg-darker: #08090c;
+  --color-card-dark: #161720;
+  --color-card-light: #1e202f;
+  
+  /* Primary palette (overridden by JS via --primary-* CSS vars) */
+  --color-primary-50: #eef2ff;
+  --color-primary-100: #e0e7ff;
+  --color-primary-500: #6366f1;
+  --color-primary-600: #4f46e5;
+  --color-primary-700: #4338ca;
+  
+  --color-accent-emerald: #10b981;
+  --color-accent-violet: #8b5cf6;
+  --color-accent-pink: #ec4899;
+}
+
+/* ====================================
+   DYNAMIC THEME CUSTOM PROPERTIES
+   Set by ConfigContext.tsx at runtime
+   ==================================== */
+:root {
+  --theme-primary: #6366f1;
+  --theme-primary-hover: #4f46e5;
+  --theme-primary-dark: #4338ca;
+  --theme-primary-glow: rgba(99, 102, 241, 0.5);
+  --theme-primary-soft: rgba(99, 102, 241, 0.1);
+  --theme-primary-softer: rgba(99, 102, 241, 0.05);
+  --theme-primary-border: rgba(99, 102, 241, 0.3);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0f1015;
+}
+::-webkit-scrollbar-thumb {
+  background: #2e3044;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--theme-primary-hover);
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-bg-dark);
+  color: #f3f4f6;
+  margin: 0;
+  overflow-x: hidden;
+}
+
+/* Glassmorphism utility card */
+.glass-card {
+  background: rgba(22, 23, 32, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+}
+
+.glass-card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.glass-card-hover:hover {
+  transform: translateY(-4px);
+  border-color: var(--theme-primary-border);
+  box-shadow: 0 12px 40px 0 var(--theme-primary-soft);
+}
+
+/* Dynamic glow utilities */
+.glow-primary {
+  box-shadow: 0 0 15px var(--theme-primary-glow);
+}
+.glow-emerald {
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
+}
+.glow-violet {
+  box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
+}
+
+/* ====================================
+   DYNAMIC THEME OVERRIDES
+   These target Tailwind utility classes
+   and swap their colors to the dynamic theme
+   ==================================== */
+
+/* Background utilities */
+.bg-primary-500 { background-color: var(--theme-primary) !important; }
+.bg-primary-600 { background-color: var(--theme-primary-hover) !important; }
+.bg-primary-700 { background-color: var(--theme-primary-dark) !important; }
+
+/* Opacity / soft bg utilities */
+.bg-primary-500\/10 { background-color: var(--theme-primary-soft) !important; }
+.bg-primary-500\/20 { background-color: color-mix(in srgb, var(--theme-primary) 20%, transparent) !important; }
+
+/* Text utilities */
+.text-primary-400 { color: color-mix(in srgb, var(--theme-primary) 80%, white 20%) !important; }
+.text-primary-500 { color: var(--theme-primary) !important; }
+
+/* Border utilities */
+.border-primary-500 { border-color: var(--theme-primary) !important; }
+.border-primary-500\/20 { border-color: color-mix(in srgb, var(--theme-primary) 20%, transparent) !important; }
+.border-primary-500\/30 { border-color: var(--theme-primary-border) !important; }
+
+/* Ring utilities */
+.ring-primary-500 { --tw-ring-color: var(--theme-primary) !important; }
+
+/* Hover utilities */
+.hover\:bg-primary-600:hover { background-color: var(--theme-primary-hover) !important; }
+
+/* Focus-within/active */
+.focus\:border-primary-500:focus { border-color: var(--theme-primary) !important; }
+
+/* Navigation Link styles */
+.sidebar-link {
+  transition: all 0.2s ease-in-out;
+}
+.sidebar-link.active {
+  background: linear-gradient(135deg, var(--theme-primary-soft), rgba(139, 92, 246, 0.1));
+  border-left: 4px solid var(--theme-primary);
+  color: #ffffff;
+}
+
+/* Typography styles */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+}
+
+/* Print configuration */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-card {
+    border: 1px solid #ccc !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    color: black !important;
+  }
+}
