@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import { prisma } from '../db/client';
-import { AuthenticatedRequest } from '../middleware/authMiddleware';
-import { logActivity } from '../utils/logger';
+import { prisma } from '../db/client.js';
+import { AuthenticatedRequest } from '../middleware/authMiddleware.js';
+import { logActivity } from '../utils/logger.js';
 
 export async function getCustomers(req: Request, res: Response): Promise<void> {
   const { search } = req.query;

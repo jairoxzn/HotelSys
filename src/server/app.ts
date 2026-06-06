@@ -3,14 +3,14 @@ import cors from 'cors';
 import 'dotenv/config';
 
 // Import Routes
-import authRoutes from './routes/authRoutes';
-import roomRoutes from './routes/roomRoutes';
-import customerRoutes from './routes/customerRoutes';
-import reservationRoutes from './routes/reservationRoutes';
-import paymentRoutes from './routes/paymentRoutes';
-import dashboardRoutes from './routes/dashboardRoutes';
-import reportRoutes from './routes/reportRoutes';
-import configRoutes from './routes/configRoutes';
+import authRoutes from './routes/authRoutes.js';
+import roomRoutes from './routes/roomRoutes.js';
+import customerRoutes from './routes/customerRoutes.js';
+import reservationRoutes from './routes/reservationRoutes.js';
+import paymentRoutes from './routes/paymentRoutes.js';
+import dashboardRoutes from './routes/dashboardRoutes.js';
+import reportRoutes from './routes/reportRoutes.js';
+import configRoutes from './routes/configRoutes.js';
 
 const app = express();
 

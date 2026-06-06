@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import { prisma } from '../db/client';
-import { AuthenticatedRequest } from '../middleware/authMiddleware';
-import { logActivity } from '../utils/logger';
+import { prisma } from '../db/client.js';
+import { AuthenticatedRequest } from '../middleware/authMiddleware.js';
+import { logActivity } from '../utils/logger.js';
 
 // GET /api/config — Public, no auth required (so login page can show hotel branding)
 export async function getConfig(req: Request, res: Response): Promise<void> {

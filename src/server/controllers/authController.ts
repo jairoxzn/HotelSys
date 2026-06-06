@@ -1,9 +1,9 @@
 import { Response } from 'express';
-import { prisma } from '../db/client';
+import { prisma } from '../db/client.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { AuthenticatedRequest } from '../middleware/authMiddleware';
-import { logActivity } from '../utils/logger';
+import { AuthenticatedRequest } from '../middleware/authMiddleware.js';
+import { logActivity } from '../utils/logger.js';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecretkeyhotelflow12345';
 

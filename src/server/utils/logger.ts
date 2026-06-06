@@ -1,4 +1,4 @@
-import { prisma } from '../db/client';
+import { prisma } from '../db/client.js';
 
 export async function logActivity(userId: string, action: string, details: string) {
   try {

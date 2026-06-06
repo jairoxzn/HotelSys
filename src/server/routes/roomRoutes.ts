@@ -6,8 +6,8 @@ import {
   updateRoom,
   updateRoomStatus,
   deleteRoom,
-} from '../controllers/roomController';
-import { authenticateToken, authorizeRoles } from '../middleware/authMiddleware';
+} from '../controllers/roomController.js';
+import { authenticateToken, authorizeRoles } from '../middleware/authMiddleware.js';
 
 const router = Router();
 

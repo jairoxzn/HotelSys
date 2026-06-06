@@ -7,8 +7,8 @@ import {
   checkInReservation,
   checkOutReservation,
   cancelReservation,
-} from '../controllers/reservationController';
-import { authenticateToken } from '../middleware/authMiddleware';
+} from '../controllers/reservationController.js';
+import { authenticateToken } from '../middleware/authMiddleware.js';
 
 const router = Router();
 

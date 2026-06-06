@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { prisma } from '../db/client';
+import { prisma } from '../db/client.js';
 
 export async function getFinancialReport(req: Request, res: Response): Promise<void> {
   const { year } = req.query;

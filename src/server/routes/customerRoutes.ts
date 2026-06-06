@@ -5,8 +5,8 @@ import {
   createCustomer,
   updateCustomer,
   deleteCustomer,
-} from '../controllers/customerController';
-import { authenticateToken, authorizeRoles } from '../middleware/authMiddleware';
+} from '../controllers/customerController.js';
+import { authenticateToken, authorizeRoles } from '../middleware/authMiddleware.js';
 
 const router = Router();
 

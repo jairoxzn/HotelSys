@@ -4,8 +4,8 @@ import {
   getRoomReport,
   getFrequentCustomersReport,
   getAuditLogsReport,
-} from '../controllers/reportController';
-import { authenticateToken, authorizeRoles } from '../middleware/authMiddleware';
+} from '../controllers/reportController.js';
+import { authenticateToken, authorizeRoles } from '../middleware/authMiddleware.js';
 
 const router = Router();
 
