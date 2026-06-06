@@ -1,9 +1,11 @@
 import { Response } from 'express';
 import { prisma } from '../db/client.js';
 import { AuthenticatedRequest } from '../middleware/authMiddleware.js';
+import { syncRoomStatuses } from '../utils/roomSync.js';
 
 export async function getDashboardStats(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
+    await syncRoomStatuses();
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 

@@ -229,10 +229,15 @@ export async function updateReservation(req: AuthenticatedRequest, res: Response
           where: { id: rId },
           data: { status: 'OCUPADA' },
         });
-      } else if (status === 'CANCELADA' || status === 'COMPLETADA') {
+      } else if (status === 'CANCELADA') {
         await prisma.room.update({
           where: { id: rId },
           data: { status: 'DISPONIBLE' },
+        });
+      } else if (status === 'COMPLETADA') {
+        await prisma.room.update({
+          where: { id: rId },
+          data: { status: 'MANTENIMIENTO' },
         });
       }
     }
@@ -322,7 +327,7 @@ export async function checkOutReservation(req: AuthenticatedRequest, res: Respon
 
     await prisma.room.update({
       where: { id: reservation.roomId },
-      data: { status: 'DISPONIBLE' },
+      data: { status: 'MANTENIMIENTO' },
     });
 
     if (req.user) {

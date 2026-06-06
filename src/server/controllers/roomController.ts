@@ -2,11 +2,13 @@ import { Request, Response } from 'express';
 import { prisma } from '../db/client.js';
 import { AuthenticatedRequest } from '../middleware/authMiddleware.js';
 import { logActivity } from '../utils/logger.js';
+import { syncRoomStatuses } from '../utils/roomSync.js';
 
 export async function getRooms(req: Request, res: Response): Promise<void> {
   const { status, type } = req.query;
 
   try {
+    await syncRoomStatuses();
     const filters: any = {};
     if (status) filters.status = status as any;
     if (type) filters.type = type as string;
