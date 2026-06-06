@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useConfig } from '../context/ConfigContext';
-import { Save, Palette, Building2, CheckCircle2, RotateCcw, Eye } from 'lucide-react';
+import { Save, Palette, Building2, CheckCircle2, RotateCcw, Eye, Upload, Trash2, Image } from 'lucide-react';
 
 // Premium curated color presets
 const COLOR_PRESETS = [
@@ -17,10 +17,11 @@ const COLOR_PRESETS = [
 ];
 
 export const SettingsPage: React.FC = () => {
-  const { hotelName, primaryColor, updateConfig, previewColor, resetPreview } = useConfig();
+  const { hotelName, primaryColor, logoUrl, updateConfig, previewColor, resetPreview } = useConfig();
 
   const [localName, setLocalName] = useState(hotelName);
   const [localColor, setLocalColor] = useState(primaryColor);
+  const [localLogo, setLocalLogo] = useState<string | null>(logoUrl);
   const [previewMode, setPreviewMode] = useState(false);
   const [saving, setSaving] = useState(false);
   const [savedSuccess, setSavedSuccess] = useState(false);
@@ -30,7 +31,8 @@ export const SettingsPage: React.FC = () => {
   useEffect(() => {
     setLocalName(hotelName);
     setLocalColor(primaryColor);
-  }, [hotelName, primaryColor]);
+    setLocalLogo(logoUrl);
+  }, [hotelName, primaryColor, logoUrl]);
 
   const handleColorSelect = (color: string) => {
     setLocalColor(color);
@@ -48,15 +50,41 @@ export const SettingsPage: React.FC = () => {
 
   const handleTogglePreview = () => {
     if (previewMode) {
-      // Turning off preview — reset to saved color
       resetPreview();
       setLocalColor(primaryColor);
       setPreviewMode(false);
     } else {
-      // Turning on preview — apply current localColor
       previewColor(localColor);
       setPreviewMode(true);
     }
+  };
+
+  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setError('La imagen es demasiado grande. El límite máximo es de 5MB.');
+      return;
+    }
+
+    // Validate type
+    if (!['image/png', 'image/jpeg', 'image/jpg', 'image/svg+xml'].includes(file.type)) {
+      setError('Formato no soportado. Por favor, sube una imagen PNG, JPG o SVG.');
+      return;
+    }
+
+    setError(null);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setLocalLogo(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleRemoveLogo = () => {
+    setLocalLogo(null);
   };
 
   const handleSave = async () => {
@@ -65,7 +93,7 @@ export const SettingsPage: React.FC = () => {
     setSavedSuccess(false);
 
     try {
-      await updateConfig({ hotelName: localName, primaryColor: localColor });
+      await updateConfig({ hotelName: localName, primaryColor: localColor, logoUrl: localLogo });
       setPreviewMode(false);
       setSavedSuccess(true);
       setTimeout(() => setSavedSuccess(false), 3000);
@@ -80,12 +108,12 @@ export const SettingsPage: React.FC = () => {
     resetPreview();
     setLocalName(hotelName);
     setLocalColor(primaryColor);
+    setLocalLogo(logoUrl);
     setPreviewMode(false);
   };
 
-  const hasChanges = localName !== hotelName || localColor !== primaryColor;
+  const hasChanges = localName !== hotelName || localColor !== primaryColor || localLogo !== logoUrl;
 
-  // Derive contrasting text color for preview badge
   const previewLetterCode = localName.charAt(0).toUpperCase();
 
   return (
@@ -95,7 +123,7 @@ export const SettingsPage: React.FC = () => {
         <div>
           <h2 className="text-2xl font-black text-white">Personalización del Sistema</h2>
           <p className="text-sm text-gray-400 mt-1">
-            Configura el nombre del hotel y los colores de toda la plataforma.
+            Configura el nombre del hotel, colores y logotipo de la plataforma.
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -170,6 +198,79 @@ export const SettingsPage: React.FC = () => {
               className="w-full bg-gray-900/60 border border-gray-700 rounded-xl px-4 py-3 text-white text-sm font-semibold placeholder-gray-600 focus:outline-none focus:border-primary-500 transition"
             />
             <p className="text-xs text-gray-600 mt-2">{localName.length}/40 caracteres</p>
+          </div>
+
+          {/* Logo Upload Card */}
+          <div className="glass-card p-6 rounded-2xl border border-gray-800/50">
+            <div className="flex items-center gap-3 mb-5">
+              <div className="p-2.5 bg-accent-violet/10 rounded-xl">
+                <Image size={18} className="text-accent-violet" />
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-white">Logotipo del Hotel</h3>
+                <p className="text-xs text-gray-500 mt-0.5">Sube tu logo para personalizar los recibos y el login.</p>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-center gap-6">
+              {/* Current logo preview box */}
+              <div className="flex-shrink-0">
+                <div className="relative group">
+                  {localLogo ? (
+                    <div className="relative w-24 h-24 rounded-2xl overflow-hidden border border-gray-700 bg-white/5 shadow-inner flex items-center justify-center">
+                      <img src={localLogo} alt="Logo preview" className="w-full h-full object-cover" />
+                      <button
+                        type="button"
+                        onClick={handleRemoveLogo}
+                        className="absolute inset-0 bg-red-600/80 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl cursor-pointer"
+                        title="Eliminar logotipo"
+                      >
+                        <Trash2 size={20} />
+                      </button>
+                    </div>
+                  ) : (
+                    <div 
+                      className="w-24 h-24 rounded-2xl flex items-center justify-center text-white text-3xl font-black shadow-xl"
+                      style={{ background: `linear-gradient(135deg, ${localColor}, #8b5cf6)` }}
+                    >
+                      {previewLetterCode}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Upload controls */}
+              <div className="flex-1 w-full space-y-3">
+                <div className="flex items-center gap-3">
+                  <label 
+                    className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-900 border border-gray-700 hover:border-gray-600 text-white hover:bg-gray-800 rounded-xl text-sm font-semibold transition cursor-pointer text-center"
+                  >
+                    <Upload size={14} />
+                    <span>Seleccionar Archivo</span>
+                    <input 
+                      type="file" 
+                      accept="image/png, image/jpeg, image/jpg, image/svg+xml" 
+                      onChange={handleLogoUpload} 
+                      className="sr-only" 
+                    />
+                  </label>
+                  {localLogo && (
+                    <button
+                      type="button"
+                      onClick={handleRemoveLogo}
+                      className="px-4 py-2.5 border border-red-500/20 hover:border-red-500/30 bg-red-500/5 hover:bg-red-500/10 text-red-400 hover:text-red-300 rounded-xl text-sm font-semibold transition cursor-pointer flex items-center gap-1.5"
+                    >
+                      <Trash2 size={14} />
+                      <span>Quitar Logo</span>
+                    </button>
+                  )}
+                </div>
+                <p className="text-[10px] text-gray-500 leading-normal">
+                  Soporta formatos PNG, JPG y SVG. Tamaño máximo recomendado: 5MB.<br />
+                  Se ajustará automáticamente para los encabezados y reportes del sistema.
+                </p>
+              </div>
+            </div>
           </div>
 
           {/* Color Theme Card */}
@@ -268,12 +369,20 @@ export const SettingsPage: React.FC = () => {
               {/* Mini header */}
               <div className="px-3 py-2 border-b border-gray-800 flex items-center gap-2"
                 style={{ background: 'rgba(8, 9, 12, 0.95)' }}>
-                <div
-                  className="w-6 h-6 rounded-md flex items-center justify-center text-white text-xs font-black shadow"
-                  style={{ background: `linear-gradient(135deg, ${localColor}, #8b5cf6)` }}
-                >
-                  {previewLetterCode}
-                </div>
+                {localLogo ? (
+                  <img 
+                    src={localLogo} 
+                    alt="Preview Logo" 
+                    className="w-6 h-6 rounded-md object-cover shadow" 
+                  />
+                ) : (
+                  <div
+                    className="w-6 h-6 rounded-md flex items-center justify-center text-white text-xs font-black shadow"
+                    style={{ background: `linear-gradient(135deg, ${localColor}, #8b5cf6)` }}
+                  >
+                    {previewLetterCode}
+                  </div>
+                )}
                 <span className="text-xs font-bold text-white truncate">{localName || 'Mi Hotel'}</span>
               </div>
 

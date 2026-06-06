@@ -178,7 +178,7 @@ export const configService = {
     const res = await api.get('/config');
     return res.data;
   },
-  update: async (data: { hotelName?: string; primaryColor?: string }) => {
+  update: async (data: { hotelName?: string; primaryColor?: string; logoUrl?: string | null }) => {
     const res = await api.put('/config', data);
     return res.data;
   },

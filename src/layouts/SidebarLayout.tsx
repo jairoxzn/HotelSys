@@ -22,7 +22,7 @@ interface SidebarLayoutProps {
 
 export const SidebarLayout: React.FC<SidebarLayoutProps> = ({ children }) => {
   const { user, logout } = useAuth();
-  const { hotelName } = useConfig();
+  const { hotelName, logoUrl } = useConfig();
   const location = useLocation();
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -84,10 +84,18 @@ export const SidebarLayout: React.FC<SidebarLayoutProps> = ({ children }) => {
       >
         {/* Brand/Logo Area */}
         <div className="h-16 flex items-center px-6 border-b border-gray-800/40">
-          <Link to="/dashboard" className="flex items-center space-x-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-primary-500 to-accent-violet flex items-center justify-center font-bold text-white text-lg shadow-md" style={{ background: `linear-gradient(135deg, var(--theme-primary), #8b5cf6)` }}>
-              {logoChar}
-            </div>
+          <Link to="/dashboard" className="flex items-center space-x-2.5">
+            {logoUrl ? (
+              <img 
+                src={logoUrl} 
+                alt="Logo" 
+                className="w-8 h-8 rounded-lg object-cover shadow-md bg-white/5" 
+              />
+            ) : (
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-white text-lg shadow-md" style={{ background: `linear-gradient(135deg, var(--theme-primary), #8b5cf6)` }}>
+                {logoChar}
+              </div>
+            )}
             <span className="text-xl font-extrabold tracking-tight bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent">
               {hotelName}
             </span>

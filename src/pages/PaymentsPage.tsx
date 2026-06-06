@@ -57,7 +57,7 @@ function numberToWords(num: number): string {
 }
 
 export const PaymentsPage: React.FC = () => {
-  const { hotelName } = useConfig();
+  const { hotelName, logoUrl } = useConfig();
   const [payments, setPayments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -237,12 +237,20 @@ export const PaymentsPage: React.FC = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pb-6 border-b border-gray-800/50">
                     <div className="space-y-3">
                       <div className="flex items-center space-x-3">
-                        <div 
-                          className="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-white text-lg shadow-md"
-                          style={{ background: `linear-gradient(135deg, var(--theme-primary), #8b5cf6)` }}
-                        >
-                          {hotelName.charAt(0).toUpperCase()}
-                        </div>
+                        {logoUrl ? (
+                          <img 
+                            src={logoUrl} 
+                            alt="Logo" 
+                            className="w-10 h-10 rounded-xl object-cover shadow-md bg-white/5" 
+                          />
+                        ) : (
+                          <div 
+                            className="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-white text-lg shadow-md"
+                            style={{ background: `linear-gradient(135deg, var(--theme-primary), #8b5cf6)` }}
+                          >
+                            {hotelName.charAt(0).toUpperCase()}
+                          </div>
+                        )}
                         <div>
                           <h3 className="text-lg font-black text-white leading-tight tracking-tight">{hotelName}</h3>
                           <p className="text-[10px] text-primary-400 font-bold uppercase tracking-wider">Hospedaje & Confort</p>

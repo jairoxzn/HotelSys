@@ -5,14 +5,16 @@ interface SystemConfig {
   id: string;
   hotelName: string;
   primaryColor: string;
+  logoUrl?: string | null;
   updatedAt: string;
 }
 
 interface ConfigContextType {
   hotelName: string;
   primaryColor: string;
+  logoUrl: string | null;
   configLoaded: boolean;
-  updateConfig: (data: { hotelName?: string; primaryColor?: string }) => Promise<void>;
+  updateConfig: (data: { hotelName?: string; primaryColor?: string; logoUrl?: string | null }) => Promise<void>;
   previewColor: (color: string) => void;
   resetPreview: () => void;
 }
@@ -22,6 +24,7 @@ const CONFIG_STORAGE_KEY = 'hotelflow_config';
 const DEFAULT_CONFIG = {
   hotelName: 'HotelFlow',
   primaryColor: '#6366f1',
+  logoUrl: null as string | null,
 };
 
 // ────────────────────────────────────────────────────────────────
@@ -97,6 +100,7 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   const [hotelName, setHotelName] = useState<string>(cached.hotelName || DEFAULT_CONFIG.hotelName);
   const [primaryColor, setPrimaryColor] = useState<string>(cached.primaryColor || DEFAULT_CONFIG.primaryColor);
+  const [logoUrl, setLogoUrl] = useState<string | null>(cached.logoUrl || DEFAULT_CONFIG.logoUrl);
   const [savedColor, setSavedColor] = useState<string>(cached.primaryColor || DEFAULT_CONFIG.primaryColor);
   const [configLoaded, setConfigLoaded] = useState(false);
 
@@ -113,10 +117,11 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         setHotelName(config.hotelName);
         setPrimaryColor(config.primaryColor);
         setSavedColor(config.primaryColor);
+        setLogoUrl(config.logoUrl || null);
         applyThemeColor(config.primaryColor);
         localStorage.setItem(
           CONFIG_STORAGE_KEY,
-          JSON.stringify({ hotelName: config.hotelName, primaryColor: config.primaryColor })
+          JSON.stringify({ hotelName: config.hotelName, primaryColor: config.primaryColor, logoUrl: config.logoUrl })
         );
       } catch (err) {
         console.warn('Could not fetch system config, using cached/default values.');
@@ -128,7 +133,7 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     loadConfig();
   }, []);
 
-  const updateConfig = useCallback(async (data: { hotelName?: string; primaryColor?: string }) => {
+  const updateConfig = useCallback(async (data: { hotelName?: string; primaryColor?: string; logoUrl?: string | null }) => {
     const updated = await configService.update(data);
     if (updated.hotelName) setHotelName(updated.hotelName);
     if (updated.primaryColor) {
@@ -136,9 +141,10 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       setSavedColor(updated.primaryColor);
       applyThemeColor(updated.primaryColor);
     }
+    setLogoUrl(updated.logoUrl !== undefined ? updated.logoUrl : null);
     localStorage.setItem(
       CONFIG_STORAGE_KEY,
-      JSON.stringify({ hotelName: updated.hotelName, primaryColor: updated.primaryColor })
+      JSON.stringify({ hotelName: updated.hotelName, primaryColor: updated.primaryColor, logoUrl: updated.logoUrl })
     );
   }, []);
 
@@ -155,7 +161,7 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   }, [savedColor]);
 
   return (
-    <ConfigContext.Provider value={{ hotelName, primaryColor, configLoaded, updateConfig, previewColor, resetPreview }}>
+    <ConfigContext.Provider value={{ hotelName, primaryColor, logoUrl, configLoaded, updateConfig, previewColor, resetPreview }}>
       {children}
     </ConfigContext.Provider>
   );

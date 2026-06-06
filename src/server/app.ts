@@ -40,7 +40,7 @@ app.use(cors({
 }));
 
 // Parse JSON request bodies
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
 
 // Request logger middleware
 app.use((req, res, next) => {

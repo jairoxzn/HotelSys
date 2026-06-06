@@ -93,5 +93,6 @@ model SystemConfig {
   id           String   @id @default("default")
   hotelName    String   @default("HotelFlow")
   primaryColor String   @default("#6366f1")
+  logoUrl      String?
   updatedAt    DateTime @updatedAt
 }

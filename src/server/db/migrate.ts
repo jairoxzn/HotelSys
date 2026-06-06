@@ -89,6 +89,7 @@ CREATE TABLE IF NOT EXISTS "SystemConfig" (
     "id" TEXT PRIMARY KEY DEFAULT 'default',
     "hotelName" TEXT NOT NULL DEFAULT 'HotelFlow',
     "primaryColor" TEXT NOT NULL DEFAULT '#6366f1',
+    "logoUrl" TEXT,
     "updatedAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 `;
@@ -99,6 +100,8 @@ async function runMigration() {
     await client.connect();
     console.log("Connected to database. Executing DDL...");
     await client.query(ddl);
+    console.log("Ensuring logoUrl column exists on SystemConfig...");
+    await client.query('ALTER TABLE "SystemConfig" ADD COLUMN IF NOT EXISTS "logoUrl" TEXT;');
     console.log("Migration executed successfully! Database schema is ready.");
   } catch (error) {
     console.error("Migration failed:", error);

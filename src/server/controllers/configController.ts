@@ -12,6 +12,7 @@ export async function getConfig(req: Request, res: Response): Promise<void> {
         id: 'default',
         hotelName: 'HotelFlow',
         primaryColor: '#6366f1',
+        logoUrl: null,
       },
       update: {},
     });
@@ -25,10 +26,10 @@ export async function getConfig(req: Request, res: Response): Promise<void> {
 
 // PUT /api/config — Admin only
 export async function updateConfig(req: AuthenticatedRequest, res: Response): Promise<void> {
-  const { hotelName, primaryColor } = req.body;
+  const { hotelName, primaryColor, logoUrl } = req.body;
 
-  if (!hotelName && !primaryColor) {
-    res.status(400).json({ error: 'Se requiere al menos hotelName o primaryColor para actualizar.' });
+  if (!hotelName && !primaryColor && logoUrl === undefined) {
+    res.status(400).json({ error: 'Se requiere al menos hotelName, primaryColor o logoUrl para actualizar.' });
     return;
   }
 
@@ -45,10 +46,12 @@ export async function updateConfig(req: AuthenticatedRequest, res: Response): Pr
         id: 'default',
         hotelName: hotelName || 'HotelFlow',
         primaryColor: primaryColor || '#6366f1',
+        logoUrl: logoUrl || null,
       },
       update: {
         ...(hotelName && { hotelName }),
         ...(primaryColor && { primaryColor }),
+        ...(logoUrl !== undefined && { logoUrl }),
       },
     });
 
@@ -56,6 +59,7 @@ export async function updateConfig(req: AuthenticatedRequest, res: Response): Pr
       const changes = [];
       if (hotelName) changes.push(`nombre de hotel a "${hotelName}"`);
       if (primaryColor) changes.push(`color principal a ${primaryColor}`);
+      if (logoUrl !== undefined) changes.push(logoUrl ? 'logotipo cargado' : 'logotipo eliminado');
       await logActivity(
         req.user.id,
         'MODIFICAR_CONFIGURACION_SISTEMA',

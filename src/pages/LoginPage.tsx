@@ -24,7 +24,7 @@ const slides = [
 
 export const LoginPage: React.FC = () => {
   const { login } = useAuth();
-  const { hotelName } = useConfig();
+  const { hotelName, logoUrl } = useConfig();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
@@ -84,12 +84,20 @@ export const LoginPage: React.FC = () => {
         
         {/* Header: Hotel Brand */}
         <div className="z-20 flex items-center space-x-3.5 animate-fadeInUp">
-          <div 
-            className="w-11 h-11 rounded-2xl flex items-center justify-center font-bold text-white text-xl shadow-xl glow-primary" 
-            style={{ background: `linear-gradient(135deg, var(--theme-primary), #8b5cf6)` }}
-          >
-            {hotelName.charAt(0).toUpperCase()}
-          </div>
+          {logoUrl ? (
+            <img 
+              src={logoUrl} 
+              alt="Logo" 
+              className="w-11 h-11 rounded-2xl object-cover shadow-xl glow-primary bg-white/5" 
+            />
+          ) : (
+            <div 
+              className="w-11 h-11 rounded-2xl flex items-center justify-center font-bold text-white text-xl shadow-xl glow-primary" 
+              style={{ background: `linear-gradient(135deg, var(--theme-primary), #8b5cf6)` }}
+            >
+              {hotelName.charAt(0).toUpperCase()}
+            </div>
+          )}
           <div>
             <span className="text-2xl font-extrabold tracking-tight text-white font-heading block leading-none">
               {hotelName}
@@ -150,12 +158,20 @@ export const LoginPage: React.FC = () => {
         <div className="mx-auto w-full max-w-md">
           {/* Header only for mobile (hidden on lg) */}
           <div className="lg:hidden flex flex-col items-center mb-8 animate-fadeInUp">
-            <div 
-              className="w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-white text-2xl shadow-xl glow-primary mb-4" 
-              style={{ background: `linear-gradient(135deg, var(--theme-primary), #8b5cf6)` }}
-            >
-              {hotelName.charAt(0).toUpperCase()}
-            </div>
+            {logoUrl ? (
+              <img 
+                src={logoUrl} 
+                alt="Logo" 
+                className="w-12 h-12 rounded-2xl object-cover shadow-xl glow-primary mb-4 bg-white/5" 
+              />
+            ) : (
+              <div 
+                className="w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-white text-2xl shadow-xl glow-primary mb-4" 
+                style={{ background: `linear-gradient(135deg, var(--theme-primary), #8b5cf6)` }}
+              >
+                {hotelName.charAt(0).toUpperCase()}
+              </div>
+            )}
             <h1 className="text-3xl font-extrabold text-white text-center font-heading">
               {hotelName}
             </h1>
