@@ -23,6 +23,10 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: (origin, callback) => {
+    // Allow all origins in development mode
+    if (process.env.NODE_ENV === 'development') {
+      return callback(null, true);
+    }
     // Allow requests with no origin (mobile apps, curl, etc.)
     if (!origin) return callback(null, true);
     // Allow any vercel.app domain or configured origins
