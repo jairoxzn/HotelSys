@@ -123,7 +123,7 @@ export const PaymentsPage: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Overview Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 no-print">
         {/* Method Pie Chart */}
         <div className="glass-card p-5 rounded-2xl border border-gray-800/50 flex flex-col justify-between">
           <h3 className="text-base font-bold text-white mb-2">Ingresos por Método</h3>
@@ -219,8 +219,8 @@ export const PaymentsPage: React.FC = () => {
 
         return (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-bg-darker/85 backdrop-blur-sm">
-            <div className="glass-card w-full max-w-2xl rounded-3xl overflow-hidden shadow-2xl border border-gray-800/80 no-print max-h-[95vh] flex flex-col animate-fadeIn">
-              <div className="px-6 py-4 border-b border-gray-800/60 flex items-center justify-between flex-shrink-0">
+            <div className="glass-card w-full max-w-2xl rounded-3xl overflow-hidden shadow-2xl border border-gray-800/80 max-h-[95vh] flex flex-col animate-fadeIn">
+              <div className="px-6 py-4 border-b border-gray-800/60 flex items-center justify-between flex-shrink-0 no-print">
                 <h3 className="text-base font-bold text-white">Comprobante de Pago Electrónico</h3>
                 <button
                   onClick={() => setShowVoucher(false)}
@@ -387,7 +387,7 @@ export const PaymentsPage: React.FC = () => {
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex items-center justify-end space-x-3 pt-2">
+                <div className="flex items-center justify-end space-x-3 pt-2 no-print">
                   <button
                     type="button"
                     onClick={() => setShowVoucher(false)}
